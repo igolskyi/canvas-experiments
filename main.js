@@ -38,7 +38,7 @@
   const writeMessage = (messageX, messageY) => {
     let x = (messageX * (6144)) / (canvas.width - 50);
     if (x > 6144) x = 6144;
-    ctx.clearRect(messageX, messageY, 60, 19);
+    // ctx.clearRect(messageX, messageY, 60, 19);
     ctx.font = '15px Ubuntu Mono';
     ctx.fillStyle = '#fff';
     ctx.fillText(x.toFixed(2), messageX - 25, 45);
