@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+}
+
+.container {
+  width: 1000px;
+  position: relative;
+  margin-left: 50px;
+}
+
+.webgl {
+  top: 50px;
+  display: block;
+  position: absolute;
+  background-color: rgba(100,100,100, 0.9);
+  z-index: 1;
+}
+
+.ctx2d {
+  display: block;
+  position: absolute;
+  /* background-color: rgba(200,100,100, 0.1); */
+  border: 1px solid #333;
+  z-index: 2;
+}
+
+canvas:hover {
+  cursor:none;
+}
