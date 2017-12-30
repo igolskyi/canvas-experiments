@@ -6,10 +6,6 @@
   //   writeMessage(canvas, messageX, messageY);
   // }, false);
 
-  const canvasW = document.getElementById('webgl');
-  const gl = canvasW.getContext('webgl');
-  canvasW.width = window.innerWidth - 100;
-  canvasW.height = window.innerHeight / 2;
 
   // -------------2d-----------------------------
   const canvas = document.getElementById('2d');
@@ -123,6 +119,12 @@
 
 
   // ------------------webgl--------------------------
+  const canvasW = document.getElementById('webgl');
+  const gl = canvasW.getContext('webgl');
+  canvasW.width = window.innerWidth - 100;
+  canvasW.height = window.innerHeight / 2;
+  canvasW.style.width = '96%';
+
   const createShader = (gl, type, source) => {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -149,11 +151,11 @@
   };
 
   const VSHADER_SOUCE = `
-    attribute vec4 a_Position;
-    uniform vec4 u_Translation;
+    attribute float a_Kx;
+    attribute float a_Data;
 
     void main() {
-      gl_Position = a_Position + u_Translation;
+      gl_Position = vec4(a_Kx, a_Data, 0, 1.0);
     }
   `;
 
@@ -165,48 +167,52 @@
     }
   `;
 
+  const generateGraph = (L) => {
+    const array = [];
+    for (let i = 0; i < L; i += 1) {
+      array[i] = Math.random(1) * Math.sin(i);
+    }
+    return array;
+  };
 
-  function initVertexBuffers(gl) {
-    const vertices = new Float32Array([
-      0.0, 0.5, -0.5, -0.5, 0.5, -0.5,
-    ]);
-    const m = 3;
-
-    const vertexBuffer = gl.createBuffer();
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-    const aPosition = gl.getAttribLocation(PROGRAM, 'a_Position');
-    const uTranslation = gl.getUniformLocation(PROGRAM, 'u_Translation');
-
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(aPosition);
-
-    return m;
-  }
+  const LL = 6144;
+  const Kx = R.memoize(L => Float32Array.from(R.map(x => x / L * 2 - 1, R.range(0, L))));
 
   const VS = createShader(gl, gl.VERTEX_SHADER, VSHADER_SOUCE);
   const FS = createShader(gl, gl.FRAGMENT_SHADER, FSHADER_SOURCE);
   const PROGRAM = createProgram(gl, VS, FS);
   gl.useProgram(PROGRAM);
 
-  const n = initVertexBuffers(gl);
-  if (n < 0) return false;
+  function recalculateSpectrogram() {
+    const sKxBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, sKxBuffer);
 
+    const aKx = gl.getAttribLocation(PROGRAM, 'a_Kx');
+    gl.enableVertexAttribArray(aKx);
+    gl.bufferData(gl.ARRAY_BUFFER, Kx(LL), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(aKx, 1, gl.FLOAT, false, 0, 0);
+
+    const dataBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, dataBuffer);
+
+    const aData = gl.getAttribLocation(PROGRAM, 'a_Data');
+    gl.enableVertexAttribArray(aData);
+    gl.vertexAttribPointer(aData, 1, gl.FLOAT, false, 0, 0);
+  }
+
+  recalculateSpectrogram();
+
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.clearColor(0.0, 0.0, 0.0, 0.2);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  const draw = () => {
+    const vertices = new Float32Array(generateGraph(LL));
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
+    gl.drawArrays(gl.POINTS, 0, LL);
+    // gl.drawArrays(gl.LINE_STRIP, 0, LL);
+    requestAnimationFrame(draw);
+  };
 
-  const aPosition = gl.getAttribLocation(PROGRAM, 'a_Position');
-  const uTranslation = gl.getUniformLocation(PROGRAM, 'u_Translation');
-  const Tx = 0.5;
-  const Ty = 0.5;
-  const Tz = 0.0;
-
-
-  gl.vertexAttrib3f(aPosition, 0.0, 0.0, 0.0);
-  gl.uniform4f(uTranslation, Tx, Ty, Tz, 0.0);
-
-  gl.drawArrays(gl.TRIANGLES, 0, n);
+  requestAnimationFrame(draw);
 })();
