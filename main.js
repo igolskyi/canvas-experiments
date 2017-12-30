@@ -123,7 +123,7 @@
   const gl = canvasW.getContext('webgl');
   canvasW.width = window.innerWidth - 100;
   canvasW.height = window.innerHeight / 2;
-  canvasW.style.width = '96%';
+  // canvasW.style.width = '100%';
 
   const createShader = (gl, type, source) => {
     const shader = gl.createShader(type);
