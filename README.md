@@ -1,3 +1,3 @@
-# My experiments with two canvas
+# My experiments with two canvas and webGL
 
-Test it at https://dedmazayukr.github.io/canvas-experiments/
+View [demo](https://dedmazayukr.github.io/canvas-experiments/)
