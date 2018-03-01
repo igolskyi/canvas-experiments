@@ -1,12 +1,4 @@
 (() => {
-  // canvas.addEventListener('mousemove', (evt) => {
-  //   const mousePos = getMousePos(canvas, evt);
-  //   const messageX = `Mouse position X: ${mousePos.x}`;
-  //   const messageY = `Mouse position Y: ${mousePos.y}`;
-  //   writeMessage(canvas, messageX, messageY);
-  // }, false);
-
-
   // -------------2d-----------------------------
   const canvas = document.getElementById('2d');
   const ctx = canvas.getContext('2d');
@@ -153,11 +145,19 @@
   const VSHADER_SOUCE = `
     attribute float a_Kx;
     attribute float a_Data;
+    uniform float u_Zoom;
+    uniform float u_dbRange;
+    uniform float u_StartLevel;
+    uniform float u_DiffCenter;
     varying float y;
+    varying vec2 xy;
 
     void main() {
       y = a_Data;
-      gl_Position = vec4(a_Kx, a_Data, 0, 1.0);
+      xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
+      gl_Position = vec4(xy.x, xy.y, 0, 1.0);
+      // gl_Position = vec4(a_Kx, a_Data, 0, 1.0);
+      // xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_DiffCenter * u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
     }
   `;
 
@@ -187,12 +187,50 @@
   };
 
   const LL = 6144;
-  const Kx = R.memoize(L => Float32Array.from(R.map(x => x / L * 2 - 1, R.range(0, L))));
+  const Kx = R.memoize(L => Float32Array.from(R.map(x => ((x / L) * 2) - 1, R.range(0, L))));
 
   const VS = createShader(gl, gl.VERTEX_SHADER, VSHADER_SOUCE);
   const FS = createShader(gl, gl.FRAGMENT_SHADER, FSHADER_SOURCE);
   const PROGRAM = createProgram(gl, VS, FS);
   gl.useProgram(PROGRAM);
+
+  const uZoom = gl.getUniformLocation(PROGRAM, 'u_Zoom');
+  const udbRange = gl.getUniformLocation(PROGRAM, 'u_dbRange');
+  const uStartLevel = gl.getUniformLocation(PROGRAM, 'u_StartLevel');
+  // const uDiffCenter = gl.getUniformLocation(PROGRAM, 'u_DiffCenter');
+
+  const zoomSlider = document.getElementById('zoomSlider');
+  const zoom = document.getElementById('zoom');
+  zoom.innerHTML = zoomSlider.value;
+
+  const dbRangeSlider = document.getElementById('dbRangeSlider');
+  const dbRange = document.getElementById('dbRange');
+  dbRange.innerHTML = dbRangeSlider.value;
+
+  const startLevelSlider = document.getElementById('startLevelSlider');
+  const startLevel = document.getElementById('startLevel');
+  startLevel.innerHTML = startLevelSlider.value;
+
+
+  zoomSlider.oninput = function () {
+    zoom.innerHTML = this.value;
+    gl.uniform1f(uZoom, this.value);
+  };
+
+  dbRangeSlider.oninput = function () {
+    dbRange.innerHTML = this.value;
+    gl.uniform1f(udbRange, this.value);
+  };
+
+  startLevelSlider.oninput = function () {
+    startLevel.innerHTML = this.value;
+    gl.uniform1f(uStartLevel, this.value);
+  };
+
+  gl.uniform1f(uZoom, 1.0);
+  gl.uniform1f(udbRange, 2.0);
+  gl.uniform1f(uStartLevel, -1.0);
+  // gl.uniform1f(uDiffCenter, 1.0);
 
   function recalculateSpectrogram() {
     const sKxBuffer = gl.createBuffer();

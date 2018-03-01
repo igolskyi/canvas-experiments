@@ -3,6 +3,7 @@ body {
 }
 
 .container {
+  display: block;
   width: 1000px;
   position: relative;
   margin-left: 50px;
@@ -26,4 +27,16 @@ body {
 
 canvas:hover {
   cursor:none;
+}
+
+.slidecontainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 500px;
+  left: 100px;
+}
+
+.slider {
+
 }

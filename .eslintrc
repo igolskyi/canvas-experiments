@@ -3,7 +3,8 @@
     "window": true,
     "document": true,
     "requestAnimationFrame": true,
-    "$": true
+    "$": true,
+    "R": true
   },
   "extends": "airbnb-base",
   "rules": {
