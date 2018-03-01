@@ -155,7 +155,7 @@
     void main() {
       y = a_Data;
       xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
-      gl_Position = vec4(xy.x, xy.y, 0, 1.0);
+      gl_Position = vec4(xy.x -1.0, xy.y, 0, 1.0);
       // gl_Position = vec4(a_Kx, a_Data, 0, 1.0);
       // xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_DiffCenter * u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
     }
@@ -203,13 +203,13 @@
   const zoom = document.getElementById('zoom');
   zoom.innerHTML = zoomSlider.value;
 
-  const dbRangeSlider = document.getElementById('dbRangeSlider');
-  const dbRange = document.getElementById('dbRange');
-  dbRange.innerHTML = dbRangeSlider.value;
+  // const dbRangeSlider = document.getElementById('dbRangeSlider');
+  // const dbRange = document.getElementById('dbRange');
+  // dbRange.innerHTML = dbRangeSlider.value;
 
-  const startLevelSlider = document.getElementById('startLevelSlider');
-  const startLevel = document.getElementById('startLevel');
-  startLevel.innerHTML = startLevelSlider.value;
+  // const startLevelSlider = document.getElementById('startLevelSlider');
+  // const startLevel = document.getElementById('startLevel');
+  // startLevel.innerHTML = startLevelSlider.value;
 
 
   zoomSlider.oninput = function () {
@@ -217,15 +217,15 @@
     gl.uniform1f(uZoom, this.value);
   };
 
-  dbRangeSlider.oninput = function () {
-    dbRange.innerHTML = this.value;
-    gl.uniform1f(udbRange, this.value);
-  };
+  // dbRangeSlider.oninput = function () {
+  //   dbRange.innerHTML = this.value;
+  //   gl.uniform1f(udbRange, this.value);
+  // };
 
-  startLevelSlider.oninput = function () {
-    startLevel.innerHTML = this.value;
-    gl.uniform1f(uStartLevel, this.value);
-  };
+  // startLevelSlider.oninput = function () {
+  //   startLevel.innerHTML = this.value;
+  //   gl.uniform1f(uStartLevel, this.value);
+  // };
 
   gl.uniform1f(uZoom, 1.0);
   gl.uniform1f(udbRange, 2.0);
