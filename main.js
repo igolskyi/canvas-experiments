@@ -149,13 +149,14 @@
     uniform float u_dbRange;
     uniform float u_StartLevel;
     uniform float u_DiffCenter;
+    uniform float u_Move;
     varying float y;
     varying vec2 xy;
 
     void main() {
       y = a_Data;
-      xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
-      gl_Position = vec4(xy.x -1.0, xy.y, 0, 1.0);
+      xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_Move * u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
+      gl_Position = vec4(xy.x, xy.y, 0, 1.0);
       // gl_Position = vec4(a_Kx, a_Data, 0, 1.0);
       // xy = vec2(a_Kx * u_Zoom, a_Data) / vec2(1.0, u_dbRange / 2.0) + vec2(u_DiffCenter * u_Zoom, 1.0 + 2.0 * u_StartLevel / u_dbRange);
     }
@@ -197,6 +198,7 @@
   const uZoom = gl.getUniformLocation(PROGRAM, 'u_Zoom');
   const udbRange = gl.getUniformLocation(PROGRAM, 'u_dbRange');
   const uStartLevel = gl.getUniformLocation(PROGRAM, 'u_StartLevel');
+  const uMove = gl.getUniformLocation(PROGRAM, 'u_Move');
   // const uDiffCenter = gl.getUniformLocation(PROGRAM, 'u_DiffCenter');
 
   const zoomSlider = document.getElementById('zoomSlider');
@@ -210,6 +212,9 @@
   // const startLevelSlider = document.getElementById('startLevelSlider');
   // const startLevel = document.getElementById('startLevel');
   // startLevel.innerHTML = startLevelSlider.value;
+  const moveSlider = document.getElementById('moveSlider');
+  const move = document.getElementById('move');
+  move.innerHTML = zoomSlider.value;
 
 
   zoomSlider.oninput = function () {
@@ -227,10 +232,17 @@
   //   gl.uniform1f(uStartLevel, this.value);
   // };
 
+  moveSlider.oninput = function () {
+    move.innerHTML = this.value;
+    gl.uniform1f(uMove, this.value / LL);
+  };
+
+
   gl.uniform1f(uZoom, 1.0);
   gl.uniform1f(udbRange, 2.0);
   gl.uniform1f(uStartLevel, -1.0);
   // gl.uniform1f(uDiffCenter, 1.0);
+  gl.uniform1f(uMove, 0.0);
 
   function recalculateSpectrogram() {
     const sKxBuffer = gl.createBuffer();
