@@ -1,32 +1,33 @@
-<html>
+<html lang="en">
 
-<head>
-  <title>WebGL</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
+  <head>
+    <title>WebGL</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
 
-<div class="container">
-  <canvas id="2d" class="ctx2d"></canvas>
-  <canvas id="webgl" class="webgl"></canvas>
-</div>
+    <div class="container">
+      <canvas id="2d" class="ctx2d"></canvas>
+      <canvas id="webgl" class="webgl"></canvas>
+    </div>
 
-<div class="slidecontainer">
-  <label for="zoomSlider">Zoom</label>
-  <input type="range" min="1" max="500" value="1" class="slider" id="zoomSlider"><span id="zoom"></span>
-  <!-- <label for="dbRangeSlider">dbRange</label>
-  <input type="range" min="1" max="100" value="2" class="slider" id="dbRangeSlider"><span id="dbRange"></span>
-  <label for="startLevelSlider">startLevel</label>
-  <input type="range" min="-100" max="100" value="-1" class="slider" id="startLevelSlider"><span id="startLevel"></span> -->
-  <!-- <input type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
-  <label for="moveSlider">Move</label>
-  <input type="range" min="-6144" max="6144" value="0" class="slider" id="moveSlider"><span id="move"></span>
-</div>
+    <div class="slidecontainer">
+      <label for="zoomSlider">Zoom</label>
+      <input type="range" min="1" max="500" value="1" class="slider" id="zoomSlider"><span id="zoom"></span>
+      <!-- <label for="dbRangeSlider">dbRange</label>
+      <input type="range" min="1" max="100" value="2" class="slider" id="dbRangeSlider"><span id="dbRange"></span>
+      <label for="startLevelSlider">startLevel</label>
+      <input type="range" min="-100" max="100" value="-1" class="slider" id="startLevelSlider"><span id="startLevel"></span> -->
+      <!-- <input type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
+      <label for="moveSlider">Move</label>
+      <input type="range" min="-6144" max="6144" value="0" class="slider" id="moveSlider"><span id="move"></span>
+    </div>
 
 
 
-<script src="libs/ramda.min.js"></script>
-<script src="libs/jquery-3.2.1.js"></script>
-<script src="main.js"></script>
-</body>
+    <script src="libs/ramda.min.js"></script>
+    <script src="libs/jquery-3.2.1.js"></script>
+    <script src="main.js"></script>
+  </body>
 
 </html>
